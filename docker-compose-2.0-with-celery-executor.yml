@@ -40,9 +40,9 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./airflow_files/dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./files:/opt/airflow/files
+      - ./airflow_files/dags:/usr/local/airflow/dags
+      - ./logs:/usr/local/airflow/logs
+      - ./files:/usr/local/airflow/files
       - /var/run/docker.sock:/var/run/docker.sock
     deploy:
       restart_policy:
@@ -56,7 +56,7 @@ services:
       - initdb
     command: webserver
     healthcheck:
-      test: ["CMD-SHELL", "[ -f /opt/airflow/airflow-webserver.pid ]"]
+      test: ["CMD-SHELL", "[ -f /usr/local/airflow/airflow-webserver.pid ]"]
       interval: 30s
       timeout: 30s
       retries: 3
@@ -76,7 +76,7 @@ services:
         delay: 8s
         max_attempts: 3
     volumes:
-      - ./logs:/opt/airflow/logs
+      - ./logs:/usr/local/airflow/logs
     command: celery flower
     networks:
       - airflow
@@ -85,9 +85,9 @@ services:
     env_file:
       - .env
     volumes:
-      - ./airflow_files/dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./files:/opt/airflow/files
+      - ./airflow_files/dags:/usr/local/airflow/dags
+      - ./logs:/usr/local/airflow/logs
+      - ./files:/usr/local/airflow/files
       - /var/run/docker.sock:/var/run/docker.sock
     command: scheduler
     depends_on:
@@ -104,9 +104,9 @@ services:
     env_file:
       - .env
     volumes:
-      - ./airflow_files/dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./files:/opt/airflow/files
+      - ./airflow_files/dags:/usr/local/airflow/dags
+      - ./logs:/usr/local/airflow/logs
+      - ./files:/usr/local/airflow/files
       - /var/run/docker.sock:/var/run/docker.sock
     command: celery worker
     depends_on:
@@ -119,13 +119,13 @@ services:
     networks:
       - airflow
   initdb:
-    image: apache/airflow:2.0.0-python3.8    
+    image: apache/airflow:2.0.0-python3.8
     env_file:
       - .env
     volumes:
-      - ./airflow_files/dags:/opt/airflow/dags
-      - ./logs:/opt/airflow/logs
-      - ./files:/opt/airflow/files
+      - ./airflow_files/dags:/usr/local/airflow/dags
+      - ./logs:/usr/local/airflow/logs
+      - ./files:/usr/local/airflow/files
       - /var/run/docker.sock:/var/run/docker.sock
     entrypoint: /bin/bash
     deploy:
